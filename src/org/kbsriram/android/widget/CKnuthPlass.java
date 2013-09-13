@@ -218,9 +218,9 @@ public class CKnuthPlass
 
     private final static float findGap(CItem start, CItem end, int linewidth)
     {
-        float delta = end.getX();
+        float delta = end.getSWidth();
         if (start != null) {
-            delta -= (start.getX()+start.getWidth());
+            delta -= (start.getSWidth()+start.getWidth());
         }
         return linewidth - delta;
     }

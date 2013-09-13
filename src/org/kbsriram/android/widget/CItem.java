@@ -85,15 +85,16 @@ class CItem
     }
 
     private CItem
-        (Type t, float width, float x, CharSequence content, int index)
+        (Type t, float width, float swidth, CharSequence content, int index)
     {
         m_type = t;
         m_width = width;
-        m_x = x;
+        m_swidth = swidth;
         m_content = content;
         m_index = index;
     }
     public float getWidth()  { return m_width; }
+    public float getSWidth()  { return m_swidth; }
     public float getX() { return m_x; }
     public float getY() { return m_y; }
     public void setX(float v) { m_x = v; }
@@ -105,8 +106,8 @@ class CItem
     { return m_index+": "+m_type+": ["+m_width+"]='"+m_content+"'"; }
 
     private final Type m_type;
-    // To save memory, these value are aliased
-    private float m_width;
+    private final float m_width;
+    private final float m_swidth;
     private float m_x;
     private float m_y;
     private final CharSequence m_content;
