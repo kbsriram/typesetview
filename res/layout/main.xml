@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#ffddddd0"
+    xmlns:typeset="http://schemas.android.com/apk/res/org.kbsriram.android"
+    android:background="#fffffff0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 <LinearLayout
@@ -14,15 +15,19 @@
       android:textColor="#ff0099cc"
       android:layout_width="0px" 
       android:layout_height="wrap_content"
-      android:textSize="12dp"
-      android:padding="6dp"
+      android:textSize="12sp"
+      android:padding="8sp"
       android:layout_weight="1"/>
   <org.kbsriram.android.widget.TypesetView
       android:id="@+id/typesetview"
       android:layout_width="0px" 
       android:layout_height="wrap_content"
-      android:padding="6dp"
-      android:layout_weight="1"/>
+      android:padding="8sp"
+      android:layout_weight="1"
+      typeset:typeColor="#ff910029"
+      typeset:typeSize="12sp"
+      typeset:typeMaximumLineStretch="0px"
+      typeset:typeMaximumGlueExpansionRatio="1.0"/>
 </LinearLayout>
 </ScrollView>
 <!--

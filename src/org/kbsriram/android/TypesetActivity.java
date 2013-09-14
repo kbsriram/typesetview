@@ -25,7 +25,7 @@ public class TypesetActivity
         txt.setText(SAMPLE);
 
         TypesetView tv = (TypesetView) findViewById(R.id.typesetview);
-        tv.setTextPaintFrom(txt.getPaint(), SAMPLE);
+        tv.setTypeText(SAMPLE);
     }
 
     private final static String SAMPLE =

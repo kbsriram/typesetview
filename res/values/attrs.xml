@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="TypesetView">
+    <attr name="typeText" format="string" />
+    <attr name="typeColor" format="color" />
+    <attr name="typeSize" format="dimension" />
+    <attr name="typeLeading" format="dimension" />
+    <attr name="typeMaximumLineStretch" format="dimension" />
+    <attr name="typeMaximumGlueExpansionRatio" format="float" />
+  </declare-styleable>
+</resources>

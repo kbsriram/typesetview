@@ -7,9 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import java.util.List;
+import org.kbsriram.android.R;
 
 public class TypesetView
     extends View
@@ -24,24 +26,97 @@ public class TypesetView
     {
         super(ctx, attrs);
         initTypesetView(ctx);
+        TypedArray a = ctx.obtainStyledAttributes
+            (attrs, R.styleable.TypesetView);
+
+        setTypeColor
+            (a.getColor(R.styleable.TypesetView_typeColor, DEFAULT_TYPE_COLOR));
+
+        float v = a.getDimension(R.styleable.TypesetView_typeSize, -1f);
+        if (v > 0) { setTypeSize(v); }
+
+        v = a.getDimension(R.styleable.TypesetView_typeLeading, -1f);
+        if (v > 0) { setTypeLeading(v); }
+
+        v = a.getDimension(R.styleable.TypesetView_typeMaximumLineStretch, -1f);
+        if (v > 0) { setTypeMaximumLineStretch(v); }
+
+        v = a.getFloat
+            (R.styleable.TypesetView_typeMaximumGlueExpansionRatio, -1f);
+        if (v > 0) { setTypeMaximumGlueExpansionRatio(v); }
+
+        CharSequence s = a.getString(R.styleable.TypesetView_typeText);
+        if (s != null) { setTypeText(s); }
+        a.recycle();
     }
 
-    public void setTextPaintFrom(TextPaint tp, CharSequence text)
+    public void setTextPaintFrom(TextPaint tp)
     {
         m_paint.set(tp);
-        m_paint.setColor(0xffcc0000);
-
-        m_paras = CItem.fromCharSequence(m_paint, text);
         m_dirty = true;
+        requestLayout();
+        invalidate();
+    }
+
+    public void setTypeText(CharSequence cs)
+    {
+        m_paras = CItem.fromCharSequence(m_paint, cs);
+        m_dirty = true;
+        requestLayout();
+        invalidate();
+    }
+
+    public void setTypeColor(int color)
+    {
+        m_paint.setColor(color);
+        invalidate();
+    }
+
+    public void setTypeLeading(float v)
+    {
+        m_user_leading = v;
+        invalidate();
+    }
+
+    public void setTypeSize(float v)
+    {
+        m_paint.setTextSize(v);
+        m_dirty = true;
+        requestLayout();
+        invalidate();
+    }
+
+    public void setTypeMaximumLineStretch(float v)
+    {
+        m_user_max_line_stretch = v;
+        m_dirty = true;
+        requestLayout();
+        invalidate();
+    }
+
+    public void setTypeMaximumGlueExpansionRatio(float v)
+    {
+        if (v < 1f) {
+            throw new IllegalArgumentException
+                ("Glue expansion ratio must be >= 1.0 (was "+v+")");
+        }
+        m_user_max_glue_fraction = v - 1.0f;
+        m_dirty = true;
+        requestLayout();
         invalidate();
     }
 
     private final void initTypesetView(Context ctx)
     {
-        m_paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        m_paint.setTextSize(16f);
-        m_paint.setColor(0xffcc0000);
-        m_paint.density = ctx.getResources().getDisplayMetrics().density;
+        m_paint = new TextPaint
+            (Paint.ANTI_ALIAS_FLAG     |
+             Paint.SUBPIXEL_TEXT_FLAG  |
+             Paint.DEV_KERN_TEXT_FLAG);
+
+        DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
+        m_paint.setTextSize(DEFAULT_TYPE_SIZE_SP*metrics.scaledDensity);
+        m_paint.setColor(DEFAULT_TYPE_COLOR);
+        m_paint.density = metrics.density;
     }
 
     @Override
@@ -200,10 +275,17 @@ public class TypesetView
     {
         Log.d(TAG, "layout-text: "+line_width);
         Paint.FontMetrics fm = m_paint.getFontMetrics();
-        m_leading = (int) (0.5f+fm.descent - fm.ascent + fm.leading);
+        if (m_user_leading > 0) {
+            m_leading = m_user_leading;
+        }
+        else {
+            m_leading = (int) (0.5f+fm.descent - fm.ascent + fm.leading);
+        }
         float top = -fm.top;
-        float max_line_stretch = m_leading;
-        float max_glue_fraction = 0.225f;
+        float max_line_stretch = (m_user_max_line_stretch > 0)?
+            m_user_max_line_stretch:m_leading;
+        float max_glue_fraction = (m_user_max_glue_fraction > 0)?
+            m_user_max_glue_fraction:DEFAULT_GLUE_FRAC;
 
         CKnuthPlass.LineLength ll =
             new CKnuthPlass.ConstantLineLength(line_width);
@@ -232,7 +314,13 @@ public class TypesetView
     private List<List<CItem>> m_paras = null;
     private TextPaint m_paint;
     private float m_leading;
+    private float m_user_leading = -1f;
+    private float m_user_max_line_stretch = -1f;
+    private float m_user_max_glue_fraction = -1f;
     private boolean m_dirty = true;
     private final Rect m_cliprect = new Rect();
     private final static String TAG = TypesetView.class.getName();
+    private final static float DEFAULT_TYPE_SIZE_SP = 16f;
+    private final static int DEFAULT_TYPE_COLOR = 0xff333333;
+    private final static float DEFAULT_GLUE_FRAC = 0.22f;
 }
