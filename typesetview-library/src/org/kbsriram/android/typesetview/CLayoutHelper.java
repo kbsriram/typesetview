@@ -134,13 +134,13 @@ class CLayoutHelper
 
     int setLayoutDimensions(int avail_width, int avail_height)
     {
-        Log.d(TAG, "set-layout-dimensions: "+avail_width+"x"+avail_height);
+        // Log.d(TAG, "set-layout-dimensions: "+avail_width+"x"+avail_height);
 
         ColInfo colinfo = computeColInfoFor(avail_width, avail_height);
 
         if (!colinfo.equals(m_column_info)) {
-            Log.d(TAG, "set-layout-dimensions: colinfo change "+
-                  m_column_info+" -> "+colinfo);
+            //Log.d(TAG, "set-layout-dimensions: colinfo change "+
+            // m_column_info+" -> "+colinfo);
             m_column_info = colinfo;
             reset();
         }
@@ -207,8 +207,8 @@ class CLayoutHelper
 
         if (m_state == State.NEEDS_LINEBREAK) {
 
-            Log.d(TAG, "maybe-layout -> line-break with w="+
-                  m_column_info.m_column_width);
+            // Log.d(TAG, "maybe-layout -> line-break with w="+
+            // m_column_info.m_column_width);
 
             float max_line_stretch = (m_user_max_line_stretch > 0)?
                 m_user_max_line_stretch:leading;
@@ -227,19 +227,27 @@ class CLayoutHelper
         int height = m_column_info.m_height;
 
         if (height < 0) {
-            // Divide the height evenly.
+            // First divide the height evenly.
+
+            // Log.d(TAG, "leading = "+leading);
             float even_height =
                 (getLineCount()*leading)/m_column_info.m_column_count;
-            float adjust = (fm.bottom - fm.top) + leading;
-            if (adjust < 0f) { adjust = 0; }
-            even_height += adjust;
-            height = (int) Math.ceil(even_height);
-            Log.d(TAG, "maybe-layout -> re-adjust height to "+height);
+            // Log.d(TAG, "even-height = "+even_height);
+            // Calculate lines/column.
+            int col_lines = (int) Math.ceil(even_height/leading);
+            // Log.d(TAG, "col_lines = "+col_lines);
+            // Increase to accomodate top/bottom of font, if necessary.
+            // Log.d(TAG, "fm.top="+fm.top+",fm.bottom="+fm.bottom);
+            float adjust = (fm.bottom - fm.top) - leading;
+            // Log.d(TAG, "adjust = "+adjust);
+            if (adjust < 0) { adjust = 0; }
+            height = (int) Math.ceil(col_lines*leading + adjust);
+            // Log.d(TAG, "maybe-layout -> re-adjust height to "+height);
             m_column_info.m_height = height;
         }
 
-        Log.d(TAG, "Setting positions, ncols="+m_column_info.m_column_count+
-              ", height="+m_column_info.m_height);
+        // Log.d(TAG, "Setting positions, ncols="+m_column_info.m_column_count+
+        // ", height="+m_column_info.m_height);
 
         float y = -fm.top;
         float xadjust = 0f;
@@ -272,7 +280,7 @@ class CLayoutHelper
 
     private void reset()
     {
-        Log.d(TAG, "resetting!");
+        // Log.d(TAG, "resetting!");
         m_state = State.NEEDS_LINEBREAK;
     }
 
@@ -282,16 +290,20 @@ class CLayoutHelper
 
         int linecount = 0;
         for (List<CItem> para: m_paras) {
-            if (para.size() == 0) { continue; }
-            linecount += (1 + para.get(para.size()-1).getLine());
+            if (para.size() == 0) {
+                linecount ++;
+            }
+            else {
+                linecount += (1 + para.get(para.size()-1).getLine());
+            }
         }
-        Log.d(TAG, "linecount = "+linecount);
+        // Log.d(TAG, "linecount = "+linecount);
         return linecount;
     }
 
     private final ColInfo computeColInfoFor(int width, int height)
     {
-        Log.d(TAG, "computing colinfo for: "+width+"x"+height);
+        // Log.d(TAG, "computing colinfo for: "+width+"x"+height);
         int ncols;
         float gutter_width;
         if (m_user_gutter_width > 0) { gutter_width = m_user_gutter_width; }
@@ -310,7 +322,7 @@ class CLayoutHelper
         }
         if (ncols <= 0) { ncols = 1; }
         float colwidth = (width - (ncols - 1)*gutter_width)/ncols;
-        Log.d(TAG, "return ["+ncols+","+colwidth+","+height+"]");
+        // Log.d(TAG, "return ["+ncols+","+colwidth+","+height+"]");
         return new ColInfo(ncols, colwidth, height);
     }
 

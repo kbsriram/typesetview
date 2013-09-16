@@ -16,7 +16,9 @@ class CItem
 
     // Returns a list of paragraphs. Each paragraph is a list of
     // CItems. The tokenizer ends a paragraph when it encounters a
-    // newline.
+    // newline. Any other whitespace is collapsed to a single whitespace,
+    // except at the begining and ends of paragraphs where it is
+    // removed altogether.
     final static List<List<CItem>> fromCharSequence
         (TextPaint p, CharSequence cs)
     {
@@ -30,15 +32,18 @@ class CItem
         List<CItem> para = new ArrayList<CItem>();
         while (cidx < len) {
             char cur = cs.charAt(cidx++);
+            if (para.size() == 0) {
+                // Remove any leading whitespace from a paragraph.
+                while (Character.isWhitespace(cur) &&
+                       (cur != '\n') &&
+                       (cidx < len)) {
+                    cur = cs.charAt(cidx++);
+                }
+                // Now handle it as though this was the first thing
+                // we've seen.
+            }
 
             if (cur == '\n') {
-                // remove any following whitespace, unless there's
-                // another para indicator.
-                while ((cidx < len) &&
-                       (cs.charAt(cidx) != '\n') &&
-                       Character.isWhitespace(cs.charAt(cidx))) {
-                    cidx++;
-                }
                 // end para.
                 paras.add(para);
                 para = new ArrayList<CItem>();
@@ -54,11 +59,15 @@ class CItem
                        Character.isWhitespace(cs.charAt(cidx))) {
                     cidx++;
                 }
-                para.add
-                    (new CItem
-                     (Type.GLUE, ws_width, cum_width,
-                      last_box+"|", para.size()));
-                cum_width += ws_width;
+                // but don't add it if it occurs at the end of
+                // a paragraph.
+                if ((cidx < len) && (cs.charAt(cidx) != '\n')) {
+                    para.add
+                        (new CItem
+                         (Type.GLUE, ws_width, cum_width,
+                          last_box+"|", para.size()));
+                    cum_width += ws_width;
+                }
                 continue;
             }
 
