@@ -5,7 +5,10 @@
     <attr name="typeColor" format="color" />
     <attr name="typeSize" format="dimension" />
     <attr name="typeLeading" format="dimension" />
+    <attr name="typeGutterWidth" format="dimension" />
     <attr name="typeMaximumLineStretch" format="dimension" />
     <attr name="typeMaximumGlueExpansionRatio" format="float" />
+    <attr name="typeColumnWidth" format="dimension"/>
+    <attr name="typeColumnCount" format="integer"/>
   </declare-styleable>
 </resources>

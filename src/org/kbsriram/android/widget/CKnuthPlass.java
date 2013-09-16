@@ -17,17 +17,17 @@ public class CKnuthPlass
     // This interface lets you provide line-lengths that vary
     // based on the line number.
     public interface LineLength
-    { public int getLineLength(int line); }
+    { public float getLineLength(float w); }
 
     // Convenience implementation for line-length
     public final static class ConstantLineLength
         implements LineLength
     {
-        public ConstantLineLength(int v)
+        public ConstantLineLength(float v)
         { m_length = v; }
-        public int getLineLength(int line)
+        public float getLineLength(float line)
         { return m_length; }
-        private final int m_length;
+        private final float m_length;
     }
 
     public static void layout
@@ -63,7 +63,7 @@ public class CKnuthPlass
         int curline_start_index = 0;
         for (CItem item: items) {
             item.setX(x);
-            item.setY(line);
+            item.setLine(line);
             if (item.getIndex() == cur_break_index) {
                 // Slightly redistribute x positions to available
                 // space.
@@ -216,7 +216,7 @@ public class CKnuthPlass
     private final static boolean isLegalBreakpoint(CItem item)
     { return item.getType() == CItem.Type.GLUE; }
 
-    private final static float findGap(CItem start, CItem end, int linewidth)
+    private final static float findGap(CItem start, CItem end, float linewidth)
     {
         float delta = end.getSWidth();
         if (start != null) {

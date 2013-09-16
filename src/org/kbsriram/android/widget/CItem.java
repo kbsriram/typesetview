@@ -95,10 +95,19 @@ class CItem
     }
     public float getWidth()  { return m_width; }
     public float getSWidth()  { return m_swidth; }
+
     public float getX() { return m_x; }
-    public float getY() { return m_y; }
     public void setX(float v) { m_x = v; }
-    public void setY(float v) { m_y = v; }
+
+    public int getLine() { return m_line; }
+    public void setLine(int v) { m_line = v; }
+
+    public float getAdjustedY() { return m_adjustedy; }
+    public void setAdjustedY(float v) { m_adjustedy = v; }
+
+    public float getAdjustedX() { return m_adjustedx; }
+    public void setAdjustedX(float v) { m_adjustedx = v; }
+
     public Type getType() { return m_type; }
     public CharSequence getContent() { return m_content; }
     public int getIndex() { return m_index; }
@@ -109,7 +118,9 @@ class CItem
     private final float m_width;
     private final float m_swidth;
     private float m_x;
-    private float m_y;
+    private float m_adjustedx;
+    private float m_adjustedy;
+    private int m_line;
     private final CharSequence m_content;
     private final int m_index;
     private final static String TAG = CItem.class.getName();

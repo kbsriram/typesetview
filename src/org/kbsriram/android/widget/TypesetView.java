@@ -19,24 +19,28 @@ public class TypesetView
     public TypesetView(Context ctx)
     {
         super(ctx);
-        initTypesetView(ctx);
+        m_layouthelper = new CLayoutHelper(ctx);
     }
 
     public TypesetView(Context ctx, AttributeSet attrs)
     {
         super(ctx, attrs);
-        initTypesetView(ctx);
+        m_layouthelper = new CLayoutHelper(ctx);
         TypedArray a = ctx.obtainStyledAttributes
             (attrs, R.styleable.TypesetView);
 
         setTypeColor
-            (a.getColor(R.styleable.TypesetView_typeColor, DEFAULT_TYPE_COLOR));
+            (a.getColor(R.styleable.TypesetView_typeColor,
+                        CLayoutHelper.DEFAULT_TYPE_COLOR));
 
         float v = a.getDimension(R.styleable.TypesetView_typeSize, -1f);
         if (v > 0) { setTypeSize(v); }
 
         v = a.getDimension(R.styleable.TypesetView_typeLeading, -1f);
         if (v > 0) { setTypeLeading(v); }
+
+        v = a.getDimension(R.styleable.TypesetView_typeGutterWidth, -1f);
+        if (v > 0) { setTypeGutterWidth(v); }
 
         v = a.getDimension(R.styleable.TypesetView_typeMaximumLineStretch, -1f);
         if (v > 0) { setTypeMaximumLineStretch(v); }
@@ -45,186 +49,195 @@ public class TypesetView
             (R.styleable.TypesetView_typeMaximumGlueExpansionRatio, -1f);
         if (v > 0) { setTypeMaximumGlueExpansionRatio(v); }
 
+        v = a.getFloat
+            (R.styleable.TypesetView_typeColumnWidth, -1f);
+        if (v > 0) { setTypeColumnWidth(v); }
+
+        int n = a.getInt
+            (R.styleable.TypesetView_typeColumnCount, -1);
+        if (n > 0) { setTypeColumnCount(n); }
+
         CharSequence s = a.getString(R.styleable.TypesetView_typeText);
         if (s != null) { setTypeText(s); }
         a.recycle();
     }
 
     public void setTextPaintFrom(TextPaint tp)
+    { justSetTextPaintAndIKnowWhatImDoing(tp, true); }
+
+    public void justSetTextPaintAndIKnowWhatImDoing
+        (TextPaint tp, boolean force)
     {
-        m_paint.set(tp);
-        m_dirty = true;
+        m_layouthelper.setFromTextPaint(tp, force);
         requestLayout();
         invalidate();
     }
 
+    public void setTypeColumnWidth(float v)
+    {
+        if (m_layouthelper.setUserColumnWidth(v)) {
+            requestLayout();
+            invalidate();
+        }
+    }
+
+    public void setTypeColumnCount(int n)
+    {
+        if (m_layouthelper.setUserColumnCount(n)) {
+            requestLayout();
+            invalidate();
+        }
+    }
+
     public void setTypeText(CharSequence cs)
     {
-        m_paras = CItem.fromCharSequence(m_paint, cs);
-        m_dirty = true;
+        m_layouthelper.setText(cs);
         requestLayout();
         invalidate();
     }
 
     public void setTypeColor(int color)
     {
-        m_paint.setColor(color);
+        m_layouthelper.setTextColor(color);
         invalidate();
     }
 
     public void setTypeLeading(float v)
     {
-        m_user_leading = v;
-        invalidate();
+        if (m_layouthelper.setLeading(v)) {
+            requestLayout();
+            invalidate();
+        }
+    }
+
+    public void setTypeGutterWidth(float v)
+    {
+        if (m_layouthelper.setGutterWidth(v)) {
+            requestLayout();
+            invalidate();
+        }
     }
 
     public void setTypeSize(float v)
     {
-        m_paint.setTextSize(v);
-        m_dirty = true;
-        requestLayout();
-        invalidate();
+        if (m_layouthelper.setTextSize(v)) {
+            requestLayout();
+            invalidate();
+        }
     }
 
     public void setTypeMaximumLineStretch(float v)
     {
-        m_user_max_line_stretch = v;
-        m_dirty = true;
-        requestLayout();
-        invalidate();
+        if (m_layouthelper.setMaximumLineStretch(v)) {
+            requestLayout();
+            invalidate();
+        }
     }
 
     public void setTypeMaximumGlueExpansionRatio(float v)
     {
-        if (v < 1f) {
-            throw new IllegalArgumentException
-                ("Glue expansion ratio must be >= 1.0 (was "+v+")");
+        if (m_layouthelper.setMaximumGlueExpansionRatio(v)) {
+            requestLayout();
+            invalidate();
         }
-        m_user_max_glue_fraction = v - 1.0f;
-        m_dirty = true;
-        requestLayout();
-        invalidate();
-    }
-
-    private final void initTypesetView(Context ctx)
-    {
-        m_paint = new TextPaint
-            (Paint.ANTI_ALIAS_FLAG     |
-             Paint.SUBPIXEL_TEXT_FLAG  |
-             Paint.DEV_KERN_TEXT_FLAG);
-
-        DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
-        m_paint.setTextSize(DEFAULT_TYPE_SIZE_SP*metrics.scaledDensity);
-        m_paint.setColor(DEFAULT_TYPE_COLOR);
-        m_paint.density = metrics.density;
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
         int avail_width = r - l - getPaddingLeft() - getPaddingRight();
-        Log.d(TAG, "on-layout: avail_width="+avail_width+",m_linewidth="+
-              m_linewidth);
-        if (avail_width != m_linewidth) {
-            m_linewidth = avail_width;
-            m_dirty = true;
-        }
+        int avail_height = b - t - getPaddingTop() - getPaddingBottom();
+
+        Log.d(TAG, "on-layout: avail_width="+avail_width);
+        m_layouthelper.setLayoutDimensions(avail_width, avail_height);
     }
 
     @Override
     protected void onMeasure(int wspec, int hspec)
     {
         Log.d(TAG, "wspec="+MeasureSpec.toString(wspec)+
-              ",hspec="+MeasureSpec.toString(hspec)+",m_linewidth="+
-              m_linewidth);
-        // If we don't have any text, set generic defaults for width
-        // and height and be done.
-        if ((m_paras == null) || (m_paras.size() == 0)) {
+              ",hspec="+MeasureSpec.toString(hspec));
+
+        // If we don't have any content, set generic defaults for
+        // width and height and be done.
+        if (!m_layouthelper.hasContent()) {
             super.onMeasure(wspec, hspec);
             return;
         }
 
-        Paint.FontMetrics fm = m_paint.getFontMetrics();
         // First get a reasonable value for our width.
         int wsize = MeasureSpec.getSize(wspec);
         int wmode = MeasureSpec.getMode(wspec);
 
         if (wmode == MeasureSpec.UNSPECIFIED) {
-            // just make it a one-liner from the first
-            // paragraph.
-            wsize = (int)
-                (0.5f+getPaddingLeft()+getPaddingRight()+
-                 firstParaRawWidth());
+            wsize = (int) (0.5f + getPaddingLeft()+getPaddingRight()+
+                           m_layouthelper.getUnconstrainedWidth());
         }
 
-        int line_width = wsize - getPaddingLeft() - getPaddingRight();
-        if (line_width < 0) {
-            line_width = 0;
+        int avail_width = wsize - getPaddingLeft() - getPaddingRight();
+        if (avail_width < 0) {
+            avail_width = 0;
         }
 
-        if (line_width != m_linewidth) {
-            m_linewidth = line_width;
-            m_dirty = true;
-        }
-
+        // Now for the height.
         int hmode = MeasureSpec.getMode(hspec);
         int hsize = MeasureSpec.getSize(hspec);
 
-        // If our height is fixed, just use it.
+        int avail_height;
+
         if (hmode == MeasureSpec.EXACTLY) {
-            setMeasuredDimension(wsize, hsize);
-            return;
-        }
-
-        // Layout our text if necessary.
-        if (m_dirty) {
-            layoutText(m_linewidth);
-        }
-
-        float layout_height;
-
-        CItem item = findLastItem();
-        if (item == null) {
-            // go back to defaults.
-            layout_height = getSuggestedMinimumHeight();
+            avail_height = hsize - getPaddingTop() - getPaddingBottom();
         }
         else {
-            layout_height = item.getY();
+            // ask the helper to provide a suitable height.
+            avail_height = -1;
         }
 
-        int desired_height = (int)
-            (0.5f + layout_height + fm.bottom +
-             getPaddingTop() + getPaddingBottom());
-        if (hmode == MeasureSpec.AT_MOST) {
-            if (desired_height > hsize) {
-                desired_height = hsize;
+        // run the layout algorithm
+        int measured_height = m_layouthelper.setLayoutDimensions
+            (avail_width, avail_height);
+
+        // Few more checks to merge with our layout request.
+        if (hmode == MeasureSpec.EXACTLY) {
+            measured_height = hsize;
+        }
+        else {
+            measured_height += (getPaddingTop() + getPaddingBottom());
+            if ((hmode == MeasureSpec.AT_MOST) &&
+                (measured_height > hsize)) {
+                measured_height = hsize;
             }
         }
-        setMeasuredDimension(wsize, desired_height);
+        Log.d(TAG, "Setting measured-size: "+wsize+"x"+measured_height);
+        setMeasuredDimension(wsize, measured_height);
     }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
-        if ((m_paras == null) || (m_linewidth <= 0)) { return; }
-
-        if (m_dirty) { layoutText(m_linewidth); }
+        if (!m_layouthelper.maybeLayout()) {
+            return;
+        }
 
         canvas.save();
         try {
             canvas.translate(getPaddingLeft(), getPaddingTop());
+            Paint p = m_layouthelper.getTextPaint();
+            float leading = m_layouthelper.getLeading();
             boolean have_bounds = canvas.getClipBounds(m_cliprect);
 
-            for (List<CItem> para: m_paras) {
+            for (List<CItem> para: m_layouthelper.getParagraphs()) {
                 for (CItem item: para) {
                     if (item.getType() == CItem.Type.BOX) {
-                        if (have_bounds && canSkipItem(canvas, item)) {
+                        if (have_bounds &&
+                            canSkipItem(canvas, item, leading)) {
                             continue;
                         }
+                        CharSequence cs = item.getContent();
                         canvas.drawText
-                            (item.getContent(), 0, item.getContent().length(),
-                             item.getX(), item.getY(), m_paint);
+                            (cs, 0, cs.length(),
+                             item.getAdjustedX(), item.getAdjustedY(), p);
                     }
                 }
             }
@@ -234,93 +247,15 @@ public class TypesetView
         }
     }
 
-    private final boolean canSkipItem(Canvas c, CItem item)
+    private final boolean canSkipItem(Canvas c, CItem item, float leading)
     {
+        float x = item.getAdjustedX();
+        float y = item.getAdjustedY();
         return c.quickReject
-            (item.getX(), item.getY()-m_leading,
-             item.getX()+item.getWidth(),item.getY()+m_leading,
-             Canvas.EdgeType.AA);
+            (x, y-leading, x+item.getWidth(), y+leading, Canvas.EdgeType.AA);
     }
 
-    private CItem findLastItem()
-    {
-        if (m_paras == null) {
-            return null;
-        }
-        int idx = m_paras.size()-1;
-        while (idx >= 0) {
-            List<CItem> para = m_paras.get(idx--);
-            if (para.size() == 0) { continue; }
-            return para.get(para.size()-1);
-        }
-        return null;
-    }
-
-    private float firstParaRawWidth()
-    {
-        if (m_paras == null) {
-            return 0f;
-        }
-        int max = m_paras.size();
-        for (int i=0; i<max; i++) {
-            List<CItem> para = m_paras.get(i);
-            if (para.size() == 0) { continue; }
-            CItem last = para.get(para.size()-1);
-            return last.getSWidth()+last.getWidth();
-        }
-        return 0f;
-    }
-
-    private void layoutText(int line_width)
-    {
-        Log.d(TAG, "layout-text: "+line_width);
-        Paint.FontMetrics fm = m_paint.getFontMetrics();
-        if (m_user_leading > 0) {
-            m_leading = m_user_leading;
-        }
-        else {
-            m_leading = (int) (0.5f+fm.descent - fm.ascent + fm.leading);
-        }
-        float top = -fm.top;
-        float max_line_stretch = (m_user_max_line_stretch > 0)?
-            m_user_max_line_stretch:m_leading;
-        float max_glue_fraction = (m_user_max_glue_fraction > 0)?
-            m_user_max_glue_fraction:DEFAULT_GLUE_FRAC;
-
-        CKnuthPlass.LineLength ll =
-            new CKnuthPlass.ConstantLineLength(line_width);
-        float cury = top;
-        for (List<CItem> para: m_paras) {
-            CKnuthPlass.layout(para, ll, max_line_stretch, max_glue_fraction);
-            // update y, based on leading, etc.
-            float lastline = -1f;
-            for (CItem item: para) {
-                float curline = item.getY();
-                if (lastline < 0) {
-                    lastline = curline;
-                }
-                else if (curline > lastline) {
-                    lastline = curline;
-                    cury = cury + m_leading;
-                }
-                item.setY(cury);
-            }
-            cury += m_leading;
-        }
-        m_dirty = false;
-    }
-
-    private int m_linewidth = -1;
-    private List<List<CItem>> m_paras = null;
-    private TextPaint m_paint;
-    private float m_leading;
-    private float m_user_leading = -1f;
-    private float m_user_max_line_stretch = -1f;
-    private float m_user_max_glue_fraction = -1f;
-    private boolean m_dirty = true;
+    private final CLayoutHelper m_layouthelper;
     private final Rect m_cliprect = new Rect();
     private final static String TAG = TypesetView.class.getName();
-    private final static float DEFAULT_TYPE_SIZE_SP = 16f;
-    private final static int DEFAULT_TYPE_COLOR = 0xff333333;
-    private final static float DEFAULT_GLUE_FRAC = 0.22f;
 }

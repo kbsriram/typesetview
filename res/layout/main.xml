@@ -5,30 +5,31 @@
     android:background="#fffffff0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="12dp">
-  <TextView
-      android:id="@+id/controlview"
-      android:textColor="#ff0099cc"
-      android:layout_width="0px" 
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textSize="12sp"
-      android:padding="8sp"
-      android:layout_weight="1"/>
-  <org.kbsriram.android.widget.TypesetView
-      android:id="@+id/typesetview"
-      android:layout_width="0px" 
-      android:layout_height="wrap_content"
-      android:padding="8sp"
-      android:layout_weight="1"
-      typeset:typeColor="#ff910029"
-      typeset:typeSize="12sp"
-      typeset:typeMaximumLineStretch="0px"
-      typeset:typeMaximumGlueExpansionRatio="1.0"/>
-</LinearLayout>
+      android:paddingTop="12dp">
+    <TextView
+        android:id="@+id/controlview"
+        android:textColor="#ff0099cc"
+        android:layout_height="0px" 
+        android:layout_width="match_parent"
+        android:textSize="12sp"
+        android:padding="8sp"
+        android:layout_weight="1"/>
+    <org.kbsriram.android.widget.TypesetView
+        android:id="@+id/typesetview"
+        android:layout_width="match_parent" 
+        android:layout_height="0px"
+        android:padding="8sp"
+        android:layout_weight="1"
+        typeset:typeColor="#ff910029"
+        typeset:typeSize="12sp"
+        typeset:typeColumnCount="2"
+        typeset:typeMaximumLineStretch="0px"
+        typeset:typeMaximumGlueExpansionRatio="1.0"/>
+  </LinearLayout>
 </ScrollView>
 <!--
 <FrameLayout
