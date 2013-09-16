@@ -1,4 +1,4 @@
-package org.kbsriram.android.widget;
+package org.kbsriram.android.typesetview;
 
 import java.util.List;
 import java.util.ArrayList;

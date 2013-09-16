@@ -1,12 +1,11 @@
-package org.kbsriram.android;
+package org.kbsriram.android.example;
 
 import android.app.Activity;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.graphics.Typeface;
-import android.graphics.Paint;
-
-import org.kbsriram.android.widget.TypesetView;
+import org.kbsriram.android.typesetview.TypesetView;
 
 public class TypesetActivity
     extends Activity

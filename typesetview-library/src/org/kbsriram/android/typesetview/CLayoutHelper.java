@@ -1,4 +1,4 @@
-package org.kbsriram.android.widget;
+package org.kbsriram.android.typesetview;
 
 // Essentially - handle all the mechanics of laying out text within a
 // rectangle.

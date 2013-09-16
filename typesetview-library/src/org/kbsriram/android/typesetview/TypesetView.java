@@ -1,4 +1,4 @@
-package org.kbsriram.android.widget;
+package org.kbsriram.android.typesetview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +11,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import java.util.List;
-import org.kbsriram.android.R;
 
 public class TypesetView
     extends View
