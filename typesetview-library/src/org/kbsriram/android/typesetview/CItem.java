@@ -1,11 +1,9 @@
 package org.kbsriram.android.typesetview;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import android.text.TextPaint;
 import android.util.Log;
-import android.text.Layout;
+import java.util.ArrayList;
+import java.util.List;
 
 // Data structure to hold the Box, glue or penalty in the Knuth-Plass
 // algorithm.

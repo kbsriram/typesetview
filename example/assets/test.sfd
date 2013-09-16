@@ -1,0 +1,76 @@
+SplineFontDB: 3.0
+FontName: test
+FullName: test
+FamilyName: test
+Weight: Medium
+Copyright: Created by KB Sriram with FontForge 2.0 (http://fontforge.sf.net)
+UComments: "2013-9-16: Created." 
+Version: 001.000
+ItalicAngle: 0
+UnderlinePosition: -204
+UnderlineWidth: 102
+Ascent: 1638
+Descent: 410
+LayerCount: 2
+Layer: 0 0 "Back"  1
+Layer: 1 0 "Fore"  0
+XUID: [1021 1015 1509174294 1769876]
+FSType: 0
+OS2Version: 0
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1379333443
+ModificationTime: 1379334029
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 184
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+MarkAttachClasses: 1
+DEI: 91125
+LangName: 1033 
+Encoding: ISO8859-1
+UnicodeInterp: none
+NameList: Adobe Glyph List
+DisplaySize: -96
+AntiAlias: 1
+FitToEm: 1
+WinInfo: 32 8 2
+BeginPrivate: 0
+EndPrivate
+BeginChars: 256 2
+
+StartChar: x
+Encoding: 120 120 0
+Width: 1024
+VWidth: 0
+Flags: HW
+LayerCount: 2
+Fore
+SplineSet
+0 0 m 1
+ 0 999 l 1
+ 1024 999 l 1
+ 1024 0 l 1
+ 0 0 l 1
+EndSplineSet
+Validated: 1
+EndChar
+
+StartChar: space
+Encoding: 32 32 1
+Width: 512
+VWidth: 0
+Flags: HW
+LayerCount: 2
+EndChar
+EndChars
+EndSplineFont
