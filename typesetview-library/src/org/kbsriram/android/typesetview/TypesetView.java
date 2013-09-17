@@ -61,16 +61,16 @@ public class TypesetView
         if (v > 0) { setTypeLeading(v); }
 
         v = a.getDimension(R.styleable.TypesetView_typeGutterWidth, -1f);
-        if (v > 0) { setTypeGutterWidth(v); }
+        if (v >= 0) { setTypeGutterWidth(v); }
 
         v = a.getDimension(R.styleable.TypesetView_typeMaximumLineStretch, -1f);
-        if (v > 0) { setTypeMaximumLineStretch(v); }
+        if (v >= 0) { setTypeMaximumLineStretch(v); }
 
         v = a.getFloat
             (R.styleable.TypesetView_typeMaximumGlueExpansionRatio, -1f);
-        if (v > 0) { setTypeMaximumGlueExpansionRatio(v); }
+        if (v >= 0) { setTypeMaximumGlueExpansionRatio(v); }
 
-        v = a.getFloat
+        v = a.getDimension
             (R.styleable.TypesetView_typeColumnWidth, -1f);
         if (v > 0) { setTypeColumnWidth(v); }
 

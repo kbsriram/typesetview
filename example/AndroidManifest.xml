@@ -10,6 +10,7 @@
 
   <application
       android:label="@string/app_name"
+      android:theme="@style/DemoTheme"
       android:allowBackup="false">
     <activity
         android:name="TypesetActivity"
@@ -19,5 +20,18 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity
+        android:name="MulticolumnDemoActivity"
+        android:exported="false"/>
+    <activity
+        android:name="GlueDemoActivity"
+        android:exported="false"/>
+    <activity
+        android:name="MarginDemoActivity"
+        android:exported="false"/>
+    <activity
+        android:name="CompareDemoActivity"
+        android:exported="false"/>
+
   </application>
 </manifest> 

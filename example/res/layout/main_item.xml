@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_list"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="48sp"
+    android:textSize="22sp"
+    android:paddingLeft="22sp"
+    android:gravity="center_vertical"/>

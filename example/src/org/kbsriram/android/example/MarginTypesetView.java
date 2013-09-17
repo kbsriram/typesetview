@@ -25,6 +25,13 @@ public class MarginTypesetView
     { super(ctx); }
 
     @Override
+    public void setTypeText(CharSequence cs)
+    {
+        m_big_text = cs.subSequence(0, 1).toString();
+        super.setTypeText(cs.subSequence(1, cs.length()));
+    }
+
+    @Override
     protected void onMeasure(int wspec, int hspec)
     {
         setLinePositionFromWidth(MeasureSpec.getSize(wspec));
@@ -42,18 +49,22 @@ public class MarginTypesetView
     protected void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
-        canvas.save();
-        try {
-            canvas.translate(getPaddingLeft(), getPaddingTop());
-            canvas.drawText(BIG_TEXT, 0, m_bigpaint_y, m_bigpaint);
-        }
-        finally {
-            canvas.restore();
+        if (m_big_text != null) {
+            canvas.save();
+            try {
+                canvas.translate(getPaddingLeft(), getPaddingTop());
+                canvas.drawText(m_big_text, 0, m_bigpaint_y, m_bigpaint);
+            }
+            finally {
+                canvas.restore();
+            }
         }
     }
 
     private void setLinePositionFromWidth(int width)
     {
+        if (m_big_text == null) { return; }
+
         width -= (getPaddingLeft() + getPaddingRight());
         TextPaint mypaint = getPaint();
         m_bigpaint.set(mypaint);
@@ -68,7 +79,7 @@ public class MarginTypesetView
         Paint.FontMetrics fm = mypaint.getFontMetrics();
 
         Path path = new Path();
-        m_bigpaint.getTextPath(BIG_TEXT, 0, 1, 0, m_bigpaint_y, path);
+        m_bigpaint.getTextPath(m_big_text, 0, 1, 0, m_bigpaint_y, path);
         PathMargin pm = new PathMargin
             (width, leading, -fm.top, path, leading/2f);
         setLinePosition(pm);
@@ -76,7 +87,7 @@ public class MarginTypesetView
 
     private final TextPaint m_bigpaint = new TextPaint();
     private float m_bigpaint_y = 0f;
-    private final String BIG_TEXT = "O";
+    private String m_big_text = null;
 
     private final static class PathMargin
         implements LinePosition

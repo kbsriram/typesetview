@@ -222,9 +222,9 @@ class CLayoutHelper
             // Log.d(TAG, "maybe-layout -> line-break with w="+
             // m_column_info.m_column_width);
 
-            float max_line_stretch = (m_user_max_line_stretch > 0)?
+            float max_line_stretch = (m_user_max_line_stretch >= 0)?
                 m_user_max_line_stretch:leading;
-            float max_glue_fraction = (m_user_max_glue_fraction > 0)?
+            float max_glue_fraction = (m_user_max_glue_fraction >= 0)?
                 m_user_max_glue_fraction:DEFAULT_GLUE_FRAC;
 
             int line_extra = 0;
