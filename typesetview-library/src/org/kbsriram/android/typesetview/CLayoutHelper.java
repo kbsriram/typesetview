@@ -40,6 +40,14 @@ class CLayoutHelper
         reset();
     }
 
+    boolean setLinePosition(TypesetView.LinePosition lp)
+    {
+        if (lp == m_line_position) { return false; }
+        m_line_position = lp;
+        reset();
+        return true;
+    }
+
     boolean setUserColumnWidth(float v)
     {
         if (m_user_column_width == v) { return false; }
@@ -205,6 +213,10 @@ class CLayoutHelper
         if (m_user_gutter_width > 0) { gutter_width = m_user_gutter_width; }
         else { gutter_width = leading; }
 
+        TypesetView.LinePosition lp =
+            (m_line_position != null)?m_line_position:
+            new TypesetView.ConstantLinePosition(m_column_info.m_column_width);
+
         if (m_state == State.NEEDS_LINEBREAK) {
 
             // Log.d(TAG, "maybe-layout -> line-break with w="+
@@ -215,12 +227,12 @@ class CLayoutHelper
             float max_glue_fraction = (m_user_max_glue_fraction > 0)?
                 m_user_max_glue_fraction:DEFAULT_GLUE_FRAC;
 
-            CKnuthPlass.LineLength ll =
-                new CKnuthPlass.ConstantLineLength
-                (m_column_info.m_column_width);
+            int line_extra = 0;
             for (List<CItem> para: m_paras) {
                 CKnuthPlass.layout
-                    (para, ll, max_line_stretch, max_glue_fraction);
+                    (para, lp, max_line_stretch, max_glue_fraction, line_extra);
+                if (para.size() == 0) { line_extra ++; }
+                else { line_extra += (para.get(para.size()-1).getLine()+1); }
             }
         }
 
@@ -251,6 +263,8 @@ class CLayoutHelper
 
         float y = -fm.top;
         float xadjust = 0f;
+        int curline = 0;
+        float curoffset = lp.getLeftOffset(0);
 
         for (List<CItem> para: m_paras) {
             int last_line = 0;
@@ -258,16 +272,22 @@ class CLayoutHelper
                 if (item.getLine() > last_line) {
                     last_line = item.getLine();
                     y += leading;
+                    curline++;
+                    curoffset = lp.getLeftOffset(curline);
+                    // System.out.println("curline: "+curline+" at "+item.getContent());
                     if (y > height) {
                         y = -fm.top;
                         xadjust +=
                             (m_column_info.m_column_width + gutter_width);
                     }
                 }
-                item.setAdjustedX(xadjust + item.getX());
+                item.setAdjustedX(xadjust + item.getX() + curoffset);
                 item.setAdjustedY(y);
             }
             y += leading;
+            last_line = 0;
+            curline++;
+            curoffset = lp.getLeftOffset(curline);
             if (y > height) {
                 y = -fm.top;
                 xadjust +=
@@ -334,6 +354,7 @@ class CLayoutHelper
     private float m_user_max_glue_fraction = -1f;
     private int m_user_column_count = -1;
     private float m_user_column_width = -1f;
+    private TypesetView.LinePosition m_line_position = null;
     private ColInfo m_column_info = new ColInfo(1, -1f, -1);
     private State m_state = State.NEEDS_LINEBREAK;
     private final static String TAG = CLayoutHelper.class.getName();
@@ -365,6 +386,7 @@ class CLayoutHelper
         private final float m_column_width;
         private int m_height;
     }
+
 
     private enum State { NEEDS_LINEBREAK, NEEDS_POSITION, OK };
 }

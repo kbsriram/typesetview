@@ -5,31 +5,15 @@
     android:background="#fffffff0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-  <LinearLayout
-      android:orientation="vertical"
+  <org.kbsriram.android.example.MarginTypesetView
+      android:id="@+id/typesetview"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="12dp">
-    <TextView
-        android:id="@+id/controlview"
-        android:textColor="#ff0099cc"
-        android:layout_height="0px" 
-        android:layout_width="match_parent"
-        android:textSize="12sp"
-        android:padding="8sp"
-        android:layout_weight="1"/>
-    <org.kbsriram.android.typesetview.TypesetView
-        android:id="@+id/typesetview"
-        android:layout_width="match_parent" 
-        android:layout_height="0px"
-        android:padding="8sp"
-        android:layout_weight="1"
-        typeset:typeColor="#ff910029"
-        typeset:typeSize="12sp"
-        typeset:typeColumnCount="2"
-        typeset:typeMaximumLineStretch="0px"
-        typeset:typeMaximumGlueExpansionRatio="1.0"/>
-  </LinearLayout>
+      android:padding="24sp"
+      typeset:typeColor="#ff202020"
+      typeset:typeSize="8sp"
+      typeset:typeMaximumLineStretch="48sp"
+      typeset:typeMaximumGlueExpansionRatio="1.5"/>
 </ScrollView>
 <!--
 <FrameLayout

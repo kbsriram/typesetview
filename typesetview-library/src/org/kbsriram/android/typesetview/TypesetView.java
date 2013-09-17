@@ -15,6 +15,28 @@ import java.util.List;
 public class TypesetView
     extends View
 {
+    // Provide line lengths that vary according to
+    // the line number.
+    public interface LinePosition
+    {
+        public float getLineLength(int line_number);
+        public float getLeftOffset(int line_number);
+    }
+
+    // Convenience implementation for line-length
+    public final static class ConstantLinePosition
+        implements TypesetView.LinePosition
+    {
+        public ConstantLinePosition(float v)
+        { m_length = v; }
+        public float getLineLength(int line)
+        { return m_length; }
+        public float getLeftOffset(int line)
+        { return 0f; }
+        private final float m_length;
+    }
+
+
     public TypesetView(Context ctx)
     {
         super(ctx);
@@ -88,6 +110,14 @@ public class TypesetView
         }
     }
 
+    public void setLinePosition(LinePosition lp)
+    {
+        if (m_layouthelper.setLinePosition(lp)) {
+            requestLayout();
+            invalidate();
+        }
+    }
+
     public void setTypeText(CharSequence cs)
     {
         m_layouthelper.setText(cs);
@@ -141,21 +171,27 @@ public class TypesetView
         }
     }
 
+    public TextPaint getPaint()
+    { return m_layouthelper.getTextPaint(); }
+
+    public float getLeading()
+    { return m_layouthelper.getLeading(); }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
         int avail_width = r - l - getPaddingLeft() - getPaddingRight();
         int avail_height = b - t - getPaddingTop() - getPaddingBottom();
 
-        Log.d(TAG, "on-layout: avail_width="+avail_width);
+        //Log.d(TAG, "on-layout: avail_width="+avail_width);
         m_layouthelper.setLayoutDimensions(avail_width, avail_height);
     }
 
     @Override
     protected void onMeasure(int wspec, int hspec)
     {
-        Log.d(TAG, "wspec="+MeasureSpec.toString(wspec)+
-              ",hspec="+MeasureSpec.toString(hspec));
+        //Log.d(TAG, "wspec="+MeasureSpec.toString(wspec)+
+        //      ",hspec="+MeasureSpec.toString(hspec));
 
         // If we don't have any content, set generic defaults for
         // width and height and be done.
@@ -207,7 +243,7 @@ public class TypesetView
                 measured_height = hsize;
             }
         }
-        Log.d(TAG, "Setting measured-size: "+wsize+"x"+measured_height);
+        //Log.d(TAG, "Setting measured-size: "+wsize+"x"+measured_height);
         setMeasuredDimension(wsize, measured_height);
     }
 

@@ -14,27 +14,12 @@ import java.util.HashSet;
 
 public class CKnuthPlass
 {
-    // This interface lets you provide line-lengths that vary
-    // based on the line number.
-    public interface LineLength
-    { public float getLineLength(float w); }
-
-    // Convenience implementation for line-length
-    public final static class ConstantLineLength
-        implements LineLength
-    {
-        public ConstantLineLength(float v)
-        { m_length = v; }
-        public float getLineLength(float line)
-        { return m_length; }
-        private final float m_length;
-    }
-
     public static void layout
-        (List<CItem> items, LineLength ll,
-         float max_line_stretch, float max_glue_fraction)
+        (List<CItem> items, TypesetView.LinePosition lp,
+         float max_line_stretch, float max_glue_fraction,
+         int line_number_offset)
     {
-        Node base = findBest(items, ll);
+        Node base = findBest(items, lp, line_number_offset);
 
         // Traverse base backwards to identify the line break
         // indices within the items list.
@@ -69,7 +54,7 @@ public class CKnuthPlass
                 // space.
                 readjustGlue
                     (items, curline_start_index, item.getIndex()-1,
-                     x, ll.getLineLength(line),
+                     x, lp.getLineLength(line+line_number_offset),
                      max_line_stretch, max_glue_fraction);
                 x = 0f;
                 line++;
@@ -118,7 +103,8 @@ public class CKnuthPlass
         }
     }
 
-    private static Node findBest(List<CItem> items, LineLength ll)
+    private static Node findBest
+        (List<CItem> items, TypesetView.LinePosition lp, int line_number_offset)
     {
         Set<Node> active = new HashSet<Node>();
         active.add(new Node(null, 0, 0, null));
@@ -136,7 +122,8 @@ public class CKnuthPlass
                         Node an = it.next();
                         CItem start = an.getItem();
                         float gap = findGap
-                            (start, item, ll.getLineLength(an.getLineNo()+1));
+                            (start, item, lp.getLineLength
+                             (an.getLineNo()+line_number_offset));
                         gap -= item.getWidth();
                         if (gap < 0) {
                             it.remove();
@@ -159,7 +146,8 @@ public class CKnuthPlass
                 Node an = it.next();
                 CItem start = an.getItem();
                 float gap = findGap
-                    (start, item, ll.getLineLength(an.getLineNo()+1));
+                    (start, item, lp.getLineLength
+                     (an.getLineNo()+line_number_offset));
                 if (gap < 0) {
                     //System.out.println("Remove "+start+" from active");
                     if (-gap < best_fallback_cost) {

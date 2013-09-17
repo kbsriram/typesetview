@@ -16,8 +16,8 @@ public class CKnuthPlassTest extends ATypefaceTest
         List<CItem> para = paras.get(0);
         CKnuthPlass.layout
             (para,
-             new CKnuthPlass.ConstantLineLength
-             (6*TEST_WIDTH), 0f, 0f);
+             new TypesetView.ConstantLinePosition
+             (6*TEST_WIDTH), 0f, 0f, 0);
 
         // Expect a break after the first word and the
         // third word.
