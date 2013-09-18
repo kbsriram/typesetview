@@ -30,6 +30,9 @@
         android:name="MarginDemoActivity"
         android:exported="false"/>
     <activity
+        android:name="MarginDemo2Activity"
+        android:exported="false"/>
+    <activity
         android:name="CompareDemoActivity"
         android:exported="false"/>
 

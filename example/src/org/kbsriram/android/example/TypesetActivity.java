@@ -19,13 +19,15 @@ public class TypesetActivity extends Activity
 
         m_demos = new DemoItem[] {
             new DemoItem
-            (MulticolumnDemoActivity.class, "Multi-column text"),
+            (MulticolumnDemoActivity.class, "Multicolumn text"),
             new DemoItem
-            (GlueDemoActivity.class, "Word spacing adjustments"),
+            (GlueDemoActivity.class, "Inter word spacings"),
             new DemoItem
-            (MarginDemoActivity.class, "Flow text around glyph"),
+            (MarginDemo2Activity.class, "Flow text - image"),
             new DemoItem
-            (CompareDemoActivity.class, "Compare line-breaks"),
+            (MarginDemoActivity.class, "Flow text - glyph"),
+            new DemoItem
+            (CompareDemoActivity.class, "Compare linebreaks"),
         };
 
         ListView lv = (ListView) findViewById(R.id.main_list);

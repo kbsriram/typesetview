@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 import org.kbsriram.android.typesetview.TypesetView;
 
-public class MarginTypesetView
+public class GlyphTypesetView
     extends TypesetView
 {
-    public MarginTypesetView(Context ctx, AttributeSet attrs)
+    public GlyphTypesetView(Context ctx, AttributeSet attrs)
     { super(ctx, attrs); }
 
-    public MarginTypesetView(Context ctx)
+    public GlyphTypesetView(Context ctx)
     { super(ctx); }
 
     @Override
@@ -184,5 +184,5 @@ public class MarginTypesetView
         private final Map<Integer,Float> m_cache =
             new HashMap<Integer, Float>();
     }
-    private final static String TAG = MarginTypesetView.class.getName();
+    private final static String TAG = GlyphTypesetView.class.getName();
 }
