@@ -34,7 +34,7 @@ class CLayoutHelper
             m_paint.setFlags
                 (m_paint.getFlags()        |
                  Paint.ANTI_ALIAS_FLAG     |
-                 Paint.SUBPIXEL_TEXT_FLAG  |
+                 /* Paint.SUBPIXEL_TEXT_FLAG  | */ // causes rendering problems?
                  Paint.DEV_KERN_TEXT_FLAG);
         }
         reset();
