@@ -54,11 +54,19 @@ Notice that you should use `http://schemas.android.com/apk/res-auto` to refer to
 Here are the TypesetView specific attributes you can specify.
 
 `typeText` is a String, the text to display.
+
 `typeColor` is a Color to use for the text.
+
 `typeSize` is a dimension for the text size.
+
 `typeLeading` is a dimension for the leading (ie. the distance between baselines of text.
+
 `typeGutterWidth` is a dimension for the space between columns of text.
+
 `typeMaximumLineStretch` is a dimension that controls the maximum amount a line is permitted to expand. By default, it is equal to the leading.
-`typeMaximumGlueExpansionRatio` is a float and must be larger than `1`. Spaces between words are not allowed to expand larger than this ratio. By default, it is `1.22`
+
+`typeMaximumGlueExpansionRatio` is a float and must be at least 1. Spaces between words are not allowed to expand larger than this ratio. By default, it is 1.22
+
 `typeColumnWidth` is a dimension. Specify this to set a minimum column size, and TypesetView will automatically add columns as needed. If you specify this, you cannot also specify `typeColumnCount`.
-`typeColumnCount` is an integer greater than `0`. Specify this to set exactly this many columns, regardless of the width of the view. If you specify this, you cannot also specify `typeColumnWidth`.
+
+`typeColumnCount` is an integer greater than 0. Specify this to set exactly this many columns, regardless of the width of the view. If you specify this, you cannot also specify `typeColumnWidth`.
