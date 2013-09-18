@@ -32,7 +32,7 @@ Second, you can set the [typographic leading](https://en.wikipedia.org/wiki/Lead
 
 ## Using TypesetView
 
-Just add `typesetview-library` as a library project. To add a TypesetView within your layout, you might do something like
+Clone this repository, and add `typesetview-library` as a library project. To add a TypesetView within your layout, you might do something like
 
 ```XML
     <ScrollView
