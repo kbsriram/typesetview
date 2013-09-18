@@ -1,6 +1,6 @@
 # TypesetView
 
-TypesetView is an Android Library. It gives you a [View](https://developer.android.com/reference/android/view/View.html) that's great for displaying long blocks of rag-right static body text. It adds typographic niceties from more sophisticated text layout engines, allowing refined control over your content.
+TypesetView gives you an [android View](https://developer.android.com/reference/android/view/View.html) that's great for displaying paragraphs of rag-right static body text. It adds typographic niceties from more sophisticated text layout engines, allowing refined control over your content.
 
 #### Multicolumn text
 ![Landscape column example](docs/columns_landscape.jpg)
@@ -9,12 +9,12 @@ You can either directly set the number of columns, or just specify a minimum col
 
 #### Flexible margins
 
-![Margin sample](docs/flow_margin_sample2.png)
+![Margin sample](docs/flow_combined.png)
 
-You can programatically control the margins for each line in the View. You can even write code to flow text around arbitrary glyphs.
+You can programatically control the margins for each line in the View. You can even write code to flow text around arbitrary paths, like around the large "O" glyph above.
 
 #### Advanced linebreaks
-Unlike TextView, TypesetView looks ahead and breaks lines when possible to minimize long gaps in a paragraph of rag-right text. Here is a side-by-side comparison of TextView on the left, and TypesetView on the right.
+Unlike TextView, TypesetView wraps lines after examining a full paragraph of text. This allows it to minimize long gaps in a paragraph of rag-right text, if possible. Here is a side-by-side comparison of TextView on the left, and TypesetView on the right.
 
 ![Linebreak sample](docs/linebreak_sample.png)
 
