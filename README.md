@@ -1,6 +1,6 @@
 # TypesetView
 
-TypesetView is an Android Library, providing a [View](https://developer.android.com/reference/android/view/View.html) that's great for displaying long blocks ofrag-right static body text. It adds typographic niceties from more sophisticated text layout engines, allowing refined control over your content.
+TypesetView is an Android Library. It gives you a [View](https://developer.android.com/reference/android/view/View.html) that's great for displaying long blocks of rag-right static body text. It adds typographic niceties from more sophisticated text layout engines, allowing refined control over your content.
 
 #### Multicolumn text
 ![Portrait column example](https://raw.github.com/kbsriram/typesetview/docs/columns_portrait.jpg)![Landscape column example](https://raw.github.com/kbsriram/typesetview/docs/columns_landscape.jpg)
