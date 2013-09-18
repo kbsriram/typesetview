@@ -3,21 +3,17 @@
 TypesetView is an Android Library. It gives you a [View](https://developer.android.com/reference/android/view/View.html) that's great for displaying long blocks of rag-right static body text. It adds typographic niceties from more sophisticated text layout engines, allowing refined control over your content.
 
 #### Multicolumn text
-![Portrait column example](docs/columns_portrait.jpg)![Landscape column example](docs/columns_landscape.jpg)
+![Landscape column example](docs/columns_landscape.jpg)
 
 You can either directly set the number of columns, or just specify a minimum column width. If you set a minimum column width, TypesetView will automatically add columns based on the available width.
 
 #### Flexible margins
-![Flowing text around glyph](docs/flow_margin_sample1.png)
-
-You can programatically control the margins for each line in the View. For instance, you can flow text around arbitrary glyphs, as in this example shows.
+![Flowing text around glyph](docs/flow_margin_sample2.png) You can programatically control the margins for each line in the View. You can even write code to flow text around arbitrary glyphs, as in this example shows.
 
 #### Advanced linebreaks
 Unlike TextView, TypesetView looks ahead and breaks lines when possible to minimize long gaps in a paragraph of rag-right text. Here is a side-by-side comparison of TextView on the left, and TypesetView on the right.
 
-![Line breaking comparison](docs/line_sample.png)
-
-TypesetView has moved the word "of" from the first line down to the second line, which leaves a slightly bigger gap for the first line. However, this lets it avoid a much larger gap in the third line. Software typophiles - it minimizes the sum of the squares of the end-of-line gaps in text that's set rag-right. It uses a variation of the Knuth-Plass algorithm (used in TeX.) It doesn't hyphenate words, and the "badness" of a line is simply the square of the right-side gap. The last line is ignored in the calculations.
+![Line breaking comparison](docs/linebreak_sample.png) TypesetView has moved the word "of" from the first line down to the second line, which leaves a slightly bigger gap for the first line. However, this lets it avoid a much larger gap in the third line. Software typophiles - it minimizes the sum of the squares of the end-of-line gaps in text that's set rag-right. It uses a variation of the Knuth-Plass algorithm (used in TeX.) It doesn't hyphenate words, and the "badness" of a line is simply the square of the right-side gap. The last line is ignored in the calculations.
 
 #### Lastly...
 
