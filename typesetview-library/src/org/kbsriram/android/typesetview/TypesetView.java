@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -15,27 +16,21 @@ import java.util.List;
 public class TypesetView
     extends View
 {
-    // Provide line lengths that vary according to
-    // the line number.
-    public interface LinePosition
+    // Provide margins that vary according to the line number.
+    public interface MarginPosition
     {
-        public float getLineLength(int line_number);
-        public float getLeftOffset(int line_number);
+        public float getLeftMargin(int line_number);
+        public float getRightMargin(int line_number);
     }
 
     // Convenience implementation for line-length
-    public final static class ConstantLinePosition
-        implements TypesetView.LinePosition
+    public final static class NoMargins
+        implements MarginPosition
     {
-        public ConstantLinePosition(float v)
-        { m_length = v; }
-        public float getLineLength(int line)
-        { return m_length; }
-        public float getLeftOffset(int line)
-        { return 0f; }
-        private final float m_length;
+        public NoMargins() {}
+        public float getLeftMargin(int line) { return 0f; }
+        public float getRightMargin(int line) { return 0f; }
     }
-
 
     public TypesetView(Context ctx)
     {
@@ -53,6 +48,9 @@ public class TypesetView
         setTypeColor
             (a.getColor(R.styleable.TypesetView_typeColor,
                         CLayoutHelper.DEFAULT_TYPE_COLOR));
+
+        String family = a.getString(R.styleable.TypesetView_typeFontFamily);
+        if (family != null) { setTypeFontFamily(family); }
 
         float v = a.getDimension(R.styleable.TypesetView_typeSize, -1f);
         if (v > 0) { setTypeSize(v); }
@@ -110,9 +108,9 @@ public class TypesetView
         }
     }
 
-    public void setLinePosition(LinePosition lp)
+    public void setMarginPosition(MarginPosition mp)
     {
-        if (m_layouthelper.setLinePosition(lp)) {
+        if (m_layouthelper.setMarginPosition(mp)) {
             requestLayout();
             invalidate();
         }
@@ -142,6 +140,45 @@ public class TypesetView
     public void setTypeGutterWidth(float v)
     {
         if (m_layouthelper.setGutterWidth(v)) {
+            requestLayout();
+            invalidate();
+        }
+    }
+
+    public void setTypeFontFamily(String s)
+    {
+        if (s == null) { return; }
+
+        // First check for pre-defined system fonts.
+        if (SANS_SERIF.equalsIgnoreCase(s)) {
+            setTypeface(Typeface.SANS_SERIF);
+            return;
+        }
+        if (SERIF.equalsIgnoreCase(s)) {
+            setTypeface(Typeface.SERIF);
+            return;
+        }
+        if (MONOSPACE.equalsIgnoreCase(s)) {
+            setTypeface(Typeface.MONOSPACE);
+            return;
+        }
+
+        // Next check if we're an "assets" reference.
+        if (s.startsWith(ASSETS_PREFIX)) {
+            Typeface tf = Typeface.createFromAsset
+                (getContext().getAssets(), s.substring(ASSETS_PREFIX.length()));
+            if (tf != null) { setTypeface(tf); }
+            return;
+        }
+
+        // None of the above - use the system.
+        Typeface tf = Typeface.create(s, Typeface.NORMAL);
+        if (tf != null) { setTypeface(tf); }
+    }
+
+    public void setTypeface(Typeface tf)
+    {
+        if (m_layouthelper.setTypeface(tf)) {
             requestLayout();
             invalidate();
         }
@@ -293,4 +330,8 @@ public class TypesetView
     private final CLayoutHelper m_layouthelper;
     private final Rect m_cliprect = new Rect();
     private final static String TAG = TypesetView.class.getName();
+    private final static String SANS_SERIF = "sans-serif";
+    private final static String SERIF = "serif";
+    private final static String MONOSPACE = "monospace";
+    private final static String ASSETS_PREFIX = "assets/";
 }

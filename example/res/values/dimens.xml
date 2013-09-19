@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <dimen name="body_text">12sp</dimen>
+  <dimen name="title_text">14sp</dimen>
+  <dimen name="text_large">22sp</dimen>
+  <dimen name="margin">16sp</dimen>
+  <dimen name="module">24sp</dimen>
+  <dimen name="module_third">16sp</dimen>
+  <dimen name="module_fourth">18sp</dimen>
+  <dimen name="module_x2">48sp</dimen>
+  <dimen name="module_x4">96sp</dimen>
+  <dimen name="module_x10">240sp</dimen>
+</resources>

@@ -3,6 +3,7 @@
   <declare-styleable name="TypesetView">
     <attr name="typeText" format="string" />
     <attr name="typeColor" format="color" />
+    <attr name="typeFontFamily" format="string" />
     <attr name="typeSize" format="dimension" />
     <attr name="typeLeading" format="dimension" />
     <attr name="typeGutterWidth" format="dimension" />

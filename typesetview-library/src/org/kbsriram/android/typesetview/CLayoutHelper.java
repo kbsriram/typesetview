@@ -4,12 +4,12 @@ package org.kbsriram.android.typesetview;
 // rectangle.
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import java.util.List;
-import android.graphics.Paint;
-import android.text.TextPaint;
 
 class CLayoutHelper
 {
@@ -17,7 +17,6 @@ class CLayoutHelper
     {
         m_paint = new TextPaint
             (Paint.ANTI_ALIAS_FLAG     |
-             Paint.SUBPIXEL_TEXT_FLAG  |
              Paint.DEV_KERN_TEXT_FLAG);
 
         DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
@@ -34,16 +33,15 @@ class CLayoutHelper
             m_paint.setFlags
                 (m_paint.getFlags()        |
                  Paint.ANTI_ALIAS_FLAG     |
-                 /* Paint.SUBPIXEL_TEXT_FLAG  | */ // causes rendering problems?
                  Paint.DEV_KERN_TEXT_FLAG);
         }
         reset();
     }
 
-    boolean setLinePosition(TypesetView.LinePosition lp)
+    boolean setMarginPosition(TypesetView.MarginPosition mp)
     {
-        if (lp == m_line_position) { return false; }
-        m_line_position = lp;
+        if (mp == m_margin_position) { return false; }
+        m_margin_position = mp;
         reset();
         return true;
     }
@@ -101,6 +99,14 @@ class CLayoutHelper
     {
         if (m_user_gutter_width == v) { return false; }
         m_user_gutter_width = v;
+        reset();
+        return true;
+    }
+
+    boolean setTypeface(Typeface tf)
+    {
+        if (tf.equals(m_paint.getTypeface())) { return false; }
+        m_paint.setTypeface(tf);
         reset();
         return true;
     }
@@ -213,9 +219,9 @@ class CLayoutHelper
         if (m_user_gutter_width > 0) { gutter_width = m_user_gutter_width; }
         else { gutter_width = leading; }
 
-        TypesetView.LinePosition lp =
-            (m_line_position != null)?m_line_position:
-            new TypesetView.ConstantLinePosition(m_column_info.m_column_width);
+        TypesetView.MarginPosition mp =
+            (m_margin_position != null)?m_margin_position:
+            new TypesetView.NoMargins();
 
         if (m_state == State.NEEDS_LINEBREAK) {
 
@@ -230,7 +236,8 @@ class CLayoutHelper
             int line_extra = 0;
             for (List<CItem> para: m_paras) {
                 CKnuthPlass.layout
-                    (para, lp, max_line_stretch, max_glue_fraction, line_extra);
+                    (para, m_column_info.m_column_width, mp,
+                     max_line_stretch, max_glue_fraction, line_extra);
                 if (para.size() == 0) { line_extra ++; }
                 else { line_extra += (para.get(para.size()-1).getLine()+1); }
             }
@@ -264,7 +271,7 @@ class CLayoutHelper
         float y = -fm.top;
         float xadjust = 0f;
         int curline = 0;
-        float curoffset = lp.getLeftOffset(0);
+        float curoffset = mp.getLeftMargin(0);
 
         for (List<CItem> para: m_paras) {
             int last_line = 0;
@@ -273,7 +280,7 @@ class CLayoutHelper
                     last_line = item.getLine();
                     y += leading;
                     curline++;
-                    curoffset = lp.getLeftOffset(curline);
+                    curoffset = mp.getLeftMargin(curline);
                     // System.out.println("curline: "+curline+" at "+item.getContent());
                     if (y > height) {
                         y = -fm.top;
@@ -287,7 +294,7 @@ class CLayoutHelper
             y += leading;
             last_line = 0;
             curline++;
-            curoffset = lp.getLeftOffset(curline);
+            curoffset = mp.getLeftMargin(curline);
             if (y > height) {
                 y = -fm.top;
                 xadjust +=
@@ -354,7 +361,7 @@ class CLayoutHelper
     private float m_user_max_glue_fraction = -1f;
     private int m_user_column_count = -1;
     private float m_user_column_width = -1f;
-    private TypesetView.LinePosition m_line_position = null;
+    private TypesetView.MarginPosition m_margin_position = null;
     private ColInfo m_column_info = new ColInfo(1, -1f, -1);
     private State m_state = State.NEEDS_LINEBREAK;
     private final static String TAG = CLayoutHelper.class.getName();

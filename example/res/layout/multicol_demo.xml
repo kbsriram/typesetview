@@ -9,8 +9,13 @@
       android:id="@+id/multicol_demo_typesetview"
       android:layout_width="match_parent" 
       android:layout_height="wrap_content"
-      android:padding="24sp"
+      android:paddingLeft="@dimen/margin"
+      android:paddingRight="@dimen/margin"
+      android:paddingTop="@dimen/module"
+      android:paddingBottom="@dimen/module"
+      typeset:typeSize="@dimen/body_text"
+      typeset:typeLeading="@dimen/module_third"
+      typeset:typeFontFamily="serif"
       typeset:typeColor="#ff303030"
-      typeset:typeSize="12sp"
-      typeset:typeColumnWidth="150sp"/>
+      typeset:typeColumnWidth="144sp"/>
 </ScrollView>

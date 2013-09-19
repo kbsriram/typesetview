@@ -15,11 +15,11 @@ import java.util.HashSet;
 public class CKnuthPlass
 {
     public static void layout
-        (List<CItem> items, TypesetView.LinePosition lp,
+        (List<CItem> items, float width, TypesetView.MarginPosition mp,
          float max_line_stretch, float max_glue_fraction,
          int line_number_offset)
     {
-        Node base = findBest(items, lp, line_number_offset);
+        Node base = findBest(items, width, mp, line_number_offset);
 
         // Traverse base backwards to identify the line break
         // indices within the items list.
@@ -52,10 +52,12 @@ public class CKnuthPlass
             if (item.getIndex() == cur_break_index) {
                 // Slightly redistribute x positions to available
                 // space.
+                int cline = line + line_number_offset;
+                float lw =
+                    width - mp.getLeftMargin(cline) - mp.getRightMargin(cline);
                 readjustGlue
                     (items, curline_start_index, item.getIndex()-1,
-                     x, lp.getLineLength(line+line_number_offset),
-                     max_line_stretch, max_glue_fraction);
+                     x, lw, max_line_stretch, max_glue_fraction);
                 x = 0f;
                 line++;
                 curline_start_index = item.getIndex()+1;
@@ -104,7 +106,8 @@ public class CKnuthPlass
     }
 
     private static Node findBest
-        (List<CItem> items, TypesetView.LinePosition lp, int line_number_offset)
+        (List<CItem> items, float width, TypesetView.MarginPosition mp,
+         int line_number_offset)
     {
         Set<Node> active = new HashSet<Node>();
         active.add(new Node(null, 0, 0, null));
@@ -121,9 +124,10 @@ public class CKnuthPlass
                     for (Iterator<Node> it=active.iterator(); it.hasNext();) {
                         Node an = it.next();
                         CItem start = an.getItem();
-                        float gap = findGap
-                            (start, item, lp.getLineLength
-                             (an.getLineNo()+line_number_offset));
+                        int cline = an.getLineNo() + line_number_offset;
+                        float lw = width -
+                            (mp.getLeftMargin(cline)+mp.getRightMargin(cline));
+                        float gap = findGap(start, item, lw);
                         gap -= item.getWidth();
                         if (gap < 0) {
                             it.remove();
@@ -145,9 +149,10 @@ public class CKnuthPlass
             for (Iterator<Node> it=active.iterator(); it.hasNext();) {
                 Node an = it.next();
                 CItem start = an.getItem();
-                float gap = findGap
-                    (start, item, lp.getLineLength
-                     (an.getLineNo()+line_number_offset));
+                int cline = an.getLineNo()+line_number_offset;
+                float lw = width -
+                    (mp.getLeftMargin(cline)+mp.getRightMargin(cline));
+                float gap = findGap(start, item, lw);
                 if (gap < 0) {
                     //System.out.println("Remove "+start+" from active");
                     if (-gap < best_fallback_cost) {

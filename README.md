@@ -22,13 +22,15 @@ TypesetView has moved the word "of" from the first line down to the second line,
 
 #### And lastly...
 
-A couple of small typographic controls.
+A few small, but handy typographic controls.
 
 ![Glue expansion animation](docs/glue_animated.gif)
 
 First, you can allow the expansion of inter-word spaces in controlled amounts, if you want to further minimize gaps at the ends of lines.
 
 Second, you can set the [typographic leading](https://en.wikipedia.org/wiki/Leading) explicitly, rather than TextView's unintuitive spacing "multipliers" and "adders". If you want to set text at 16/18dp - you just set typeSize and typeLeading to 16dp and 18dp respectively.
+
+Third, you can directly specify font families -- including fonts you include under your `assets/` folder -- directly from your XML.
 
 ## Using TypesetView
 
@@ -57,6 +59,8 @@ Here are the TypesetView specific attributes you can specify.
 
 `typeColor` is a Color to use for the text.
 
+`typeFontFamily` is a String, naming the font to use. There are three pre-defined names, `sans-serif`, `serif` and `monospace`, which will use the appropriate system provided fonts. If you prefix the name with the magic string `assets/` -- for example -- `assets/Roboto-Slab.ttf` -- it will look for a font file at that location under your applications `assets/` directory. In all other cases, it will ask the system to create the font using the provided name.
+
 `typeSize` is a dimension for the text size.
 
 `typeLeading` is a dimension for the leading (ie. the distance between baselines of text.
@@ -70,3 +74,7 @@ Here are the TypesetView specific attributes you can specify.
 `typeColumnWidth` is a dimension. Specify this to set a minimum column size, and TypesetView will automatically add columns as needed. If you specify this, you cannot also specify `typeColumnCount`.
 
 `typeColumnCount` is an integer greater than 0. Specify this to set exactly this many columns, regardless of the width of the view. If you specify this, you cannot also specify `typeColumnWidth`.
+
+You can programatically control margins by implementing the `TypesetView.MarginPosition` interface. Please look at the provided examples for further guidance on using this interface. Good luck and make great content! Some images and text used within the samples are from the [Nippon Design Center.](http://www.ndc.co.jp/en/)
+
+![Goofing around](docs/goofing_around.jpg)

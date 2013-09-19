@@ -28,6 +28,8 @@ public class TypesetActivity extends Activity
             (MarginDemoActivity.class, "Flow text - glyph"),
             new DemoItem
             (CompareDemoActivity.class, "Compare linebreaks"),
+            new DemoItem
+            (JustForFunActivity.class, "Goofing around")
         };
 
         ListView lv = (ListView) findViewById(R.id.main_list);

@@ -8,9 +8,12 @@
       android:id="@+id/margin_demo_typesetview"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:padding="24sp"
+      android:paddingTop="@dimen/module"
+      android:paddingBottom="@dimen/module"
+      android:paddingLeft="@dimen/margin"
+      android:paddingRight="@dimen/margin"
       typeset:typeColor="#ff333330"
-      typeset:typeSize="14sp"
-      typeset:typeMaximumLineStretch="48sp"
+      typeset:typeSize="@dimen/title_text"
+      typeset:typeMaximumLineStretch="@dimen/module_x2"
       typeset:typeMaximumGlueExpansionRatio="1.5"/>
 </ScrollView>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:typeset="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+  <ImageView
+      android:id="@+id/just_for_fun_imageview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:adjustViewBounds="true"
+      android:scaleType="centerInside"
+      android:layout_marginBottom="@dimen/module"/>
+
+  <org.kbsriram.android.example.GlyphTypesetView
+      android:id="@+id/just_for_fun_typesetview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/margin"
+      android:layout_marginRight="@dimen/margin"
+      android:layout_marginBottom="@dimen/module_x4"
+      typeset:typeSize="@dimen/title_text"
+      typeset:typeColor="#ff000000"
+      typeset:typeLeading="@dimen/module_fourth"
+      typeset:typeFontFamily="serif"
+      typeset:typeColumnWidth="@dimen/module_x10"/>
+
+</LinearLayout>

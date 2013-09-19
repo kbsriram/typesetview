@@ -34,14 +34,14 @@ public class BitmapTypesetView
     @Override
     protected void onMeasure(int wspec, int hspec)
     {
-        setLinePositionFromWidth(MeasureSpec.getSize(wspec));
+        setMarginPositionFromWidth(MeasureSpec.getSize(wspec));
         super.onMeasure(wspec, hspec);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
-        setLinePositionFromWidth(r - l);
+        setMarginPositionFromWidth(r - l);
         super.onLayout(changed, l, t, r, b);
     }
 
@@ -55,11 +55,11 @@ public class BitmapTypesetView
         }
     }
 
-    private void setLinePositionFromWidth(int width)
+    private void setMarginPositionFromWidth(int width)
     {
         if (m_bitmap == null) {
             // let the view use its defaults.
-            setLinePosition(null);
+            setMarginPosition(null);
             return;
         }
 
@@ -70,35 +70,32 @@ public class BitmapTypesetView
         float adjust = (fm.top > leading)?(fm.top-leading):0f;
         int nlines = (int) Math.ceil(m_bitmap.getHeight()/leading);
         float left_off = m_bitmap.getWidth() + m_bitmap_pad;
-        setLinePosition(new LP(view_width, left_off, nlines));
+        setMarginPosition(new MP(left_off, nlines));
     }
 
     private Bitmap m_bitmap = null;
     private float m_bitmap_left = -1f;
     private float m_bitmap_pad = -1f;
 
-    private final static class LP
-        implements LinePosition
+    private final static class MP
+        implements MarginPosition
     {
-        LP(float width, float left_off, int nlines)
+        MP(float left_margin, int nlines)
         {
-            m_width = width;
-            m_left_offset = left_off;
+            m_left_margin = left_margin;
             m_nlines = nlines;
-            Log.d(TAG, "w="+width+", lo="+left_off+",nl="+nlines);
         }
 
-        public float getLeftOffset(int line)
+        public float getLeftMargin(int line)
         {
-            if (line < m_nlines) { return m_left_offset; }
+            if (line < m_nlines) { return m_left_margin; }
             else { return 0f; }
         }
 
-        public float getLineLength(int line)
-        { return m_width - getLeftOffset(line); }
+        public float getRightMargin(int line)
+        { return 0f; }
 
-        private final float m_width;
-        private final float m_left_offset;
+        private final float m_left_margin;
         private final int m_nlines;
     }
     private final static String TAG = BitmapTypesetView.class.getName();

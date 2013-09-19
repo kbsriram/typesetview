@@ -35,6 +35,10 @@
     <activity
         android:name="CompareDemoActivity"
         android:exported="false"/>
+    <activity
+        android:name="JustForFunActivity"
+        android:theme="@style/DemoTheme.NoTitle"
+        android:exported="false"/>
 
   </application>
 </manifest> 

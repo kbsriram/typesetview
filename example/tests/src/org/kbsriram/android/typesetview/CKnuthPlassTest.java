@@ -33,9 +33,7 @@ public class CKnuthPlassTest extends ATypefaceTest
         List<CItem> para = paras.get(0);
 
         CKnuthPlass.layout
-            (para,
-             new TypesetView.ConstantLinePosition
-             (width*TEST_WIDTH), 0f, 0f, 0);
+            (para, (width*TEST_WIDTH), new TypesetView.NoMargins(), 0f, 0f, 0);
 
         int last = -1;
         StringBuilder sb = new StringBuilder();
@@ -55,7 +53,7 @@ public class CKnuthPlassTest extends ATypefaceTest
     }
     
     private final static String WIKI_TEXT = "xxx xx xx xxxxx";
-    private final static String WIKI_COST = 10;
+    private final static int COST_WIKI = 10;
     private final static String HAND_COMPARISON = "xxx xxxx xxxxxxx x xxxxx xxxxxxxx xxx xx xxx xxxxxx xxx xxxxxx xxx xxxx xxx xx xxxx x xxxx xx xxxxxxx xx x xxxxx xxx xxxx xxx xxxx xx x xxxx xxxxxx xx xxxxxx xxxx xxxx xx xxx xxxxx xx xxx xxx xxx xxxxxxx xxxx xx xxxx x xxxxxx xxx xxx xxx x xxxxxx xxxx xx xxx xxxxx xxxxx xxx xxx xxxxxxxxx xxxxxxxxxx xxx xxx xxx xxxxxx xxxxxxx xx xx xxxx xxx xxxx xxx xxxxxxxx xx xxxxx xx xx xxxxx xxxxx x xxxx xxx xxxxx xx xx xx xxxx xxxx xxx xxxxxx xxxxxxxx xx xx xx xxxxx xxx xxx xxxx xxxxxxx xxxxx xxx xxxxxx xxxxx xxxx xxx xxxxxxx xxxx xx xxxx xx xxxx xxxx xxxx xxx xxxxxxx xxx xxxxxxxx xxxxxx xxxx xxx xxxxxx xxxxx xxx xxxxx xxx xx xxx xxxx xxxxx xx xxxx xxxx xxx xxxxx xxx xxx xxx xxxxxx xx xxx xxxx xxx xxxxx xx xxxxxx xxx xxxxx xxx xxxxx xxxxxx xx x xxxxx xxxx xxx xx xxxx xxxxxx x xxxxx xxxx xxx xx xxxx xxxxxxx xxx xxxxxxx xxx xxxxxxxxxx xxxx x xxxx xx xxx xxxxxxx";
     private final static int COST_80 = 71;
     private final static int COST_60 = 107;

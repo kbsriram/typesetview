@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="DemoTheme" parent="@android:style/Theme.Light">
+  <style name="DemoTheme" parent="@android:style/Theme.Holo.Light">
     <item name="android:colorBackground">@android:color/white</item>
   </style>
   <style name="DemoTheme.NoTitle" parent="DemoTheme">
+    <item name="android:windowActionBar">false</item>
     <item name="android:windowNoTitle">true</item>
   </style>
+
 </resources>
